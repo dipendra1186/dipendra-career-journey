@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects | Dipendra Timalsina</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: #f5f7fa;
+            color: #333;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 8%;
+            background: #0a192f;
+            color: white;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        nav a {
+            color: white;
+            margin-left: 20px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+
+        nav a:hover {
+            color: #64ffda;
+        }
+
+        section {
+            padding: 60px 8%;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 40px;
+            color: #0a192f;
+        }
+
+        .projects-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .project-card {
+            position: relative;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .project-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+
+        .project-content {
+            padding: 20px;
+        }
+
+        .project-content h3 {
+            margin: 0 0 10px 0;
+        }
+
+        .project-content p {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 15px;
+            min-height: 40px;
+        }
+
+        .project-content a {
+            text-decoration: none;
+            color: #0a192f;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .project-content a:hover {
+            color: #64ffda;
+        }
+
+        .tech-badges {
+            margin-top: 10px;
+        }
+
+        .tech-badges span {
+            display: inline-block;
+            background: #0a192f;
+            color: #fff;
+            padding: 4px 8px;
+            border-radius: 5px;
+            font-size: 0.75rem;
+            margin-right: 5px;
+            margin-top: 5px;
+        }
+
+        footer {
+            background: #0a192f;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .social-icons a {
+            color: white;
+            margin: 0 10px;
+            font-size: 20px;
+            transition: 0.3s;
+        }
+
+        .social-icons a:hover {
+            color: #64ffda;
+        }
+
+        /* Loader */
+        #loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0a192f;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            flex-direction: column;
+        }
+
+        #loader .spinner {
+            border: 6px solid #f3f3f3;
+            border-top: 6px solid #64ffda;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+        }
+
+        #loader p {
+            color: white;
+            font-weight: 600;
+            margin-top: 15px;
+            font-size: 1rem;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Loader -->
+    <div id="loader">
+        <div class="spinner"></div>
+        <p>Loading Projects...</p>
+    </div>
+
+    <header>
+        <div class="logo">Dipendra Timalsina</div>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="projects.html">Projects</a>
+            <a href="education.html">Education</a>
+            <a href="certificates.html">Certificates</a>
+            <a href="contact.html">Contact</a>
+        </nav>
+    </header>
+
+    <section>
+        <h2>My GitHub Projects</h2>
+        <div class="projects-container" id="projects-container"></div>
+    </section>
+
+    <footer>
+        <div class="social-icons">
+            <a href="https://www.linkedin.com/in/dipendra-timalsina-24776725a/" target="_blank"><i class="fab fa-linkedin"></i></a>
+            <a href="https://github.com/dipendra1186" target="_blank"><i class="fab fa-github"></i></a>
+            <a href="https://www.instagram.com/its_dipendra7/" target="_blank"><i class="fab fa-instagram"></i></a>
+        </div>
+        <p>© 2026 Dipendra Timalsina | Kathmandu, Nepal</p>
+    </footer>
+
+    <script>
+        const username = "dipendra1186";
+        const container = document.getElementById("projects-container");
+        const loader = document.getElementById("loader");
+
+        async function fetchRepos() {
+            try {
+                const response = await fetch(`https://api.github.com/users/${username}/repos`);
+                const repos = await response.json();
+
+                repos.sort((a, b) => b.stargazers_count - a.stargazers_count);
+
+                repos.forEach(repo => {
+                    const imgUrl = `https://picsum.photos/seed/${repo.name}/400/180`;
+                    const card = document.createElement("div");
+                    card.className = "project-card";
+                    card.innerHTML = `
+                <img src="${imgUrl}" alt="${repo.name}">
+                <div class="project-content">
+                    <h3>${repo.name}</h3>
+                    <p>${repo.description || "No description provided."}</p>
+                    <a href="${repo.html_url}" target="_blank">View on GitHub <i class="fab fa-github"></i></a>
+                    <div class="tech-badges">
+                        ${repo.language ? `<span>${repo.language}</span>` : ''}
+                    </div>
+                </div>
+            `;
+                    container.appendChild(card);
+                });
+
+                // Hide loader and fade in projects
+                loader.style.display = "none";
+                container.style.opacity = "1";
+            } catch (err) {
+                container.innerHTML = "<p>Unable to fetch GitHub projects at this moment.</p>";
+                console.error(err);
+                loader.style.display = "none";
+                container.style.opacity = "1";
+            }
+        }
+
+        fetchRepos();
+    </script>
+
+</body>
+
+</html>

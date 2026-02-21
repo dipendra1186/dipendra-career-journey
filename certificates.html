@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certificates | Dipendra Timalsina</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: #f0f4f8;
+            color: #333;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 8%;
+            background: #0a192f;
+            color: white;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        nav a {
+            color: white;
+            margin-left: 20px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+
+        nav a:hover {
+            color: #64ffda;
+        }
+
+        section {
+            padding: 60px 8%;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 50px;
+            color: #0a192f;
+        }
+
+        .cert-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 30px;
+            perspective: 1000px;
+        }
+
+        .cert-card {
+            position: relative;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transform-style: preserve-3d;
+            transition: transform 0.5s, box-shadow 0.5s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .cert-card:hover {
+            transform: rotateY(5deg) rotateX(5deg) scale(1.05);
+            box-shadow: 0 25px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .cert-card img {
+            width: 100%;
+            height: auto;
+            /* auto height to keep aspect ratio */
+            max-height: 220px;
+            /* limit max height to keep uniformity */
+            object-fit: contain;
+            /* ensure whole image fits */
+            transition: transform 0.5s;
+            border-bottom: 1px solid #eee;
+            background: #f7f7f7;
+            /* placeholder background */
+        }
+
+        .cert-card:hover img {
+            transform: scale(1.08);
+        }
+
+        .cert-card h3 {
+            margin: 12px 0 5px;
+            font-size: 1.1rem;
+            color: #0a192f;
+            text-align: center;
+        }
+
+        .cert-card p {
+            font-size: 0.85rem;
+            line-height: 1.4;
+            text-align: center;
+            padding: 0 10px;
+            flex-grow: 1;
+        }
+
+        .cert-card span {
+            font-size: 0.8rem;
+            color: #555;
+            margin-bottom: 12px;
+        }
+
+        /* Lightbox */
+        #lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            animation: fadeIn 0.3s ease;
+        }
+
+        #lightbox img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 12px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        #lightbox span {
+            position: absolute;
+            top: 20px;
+            right: 40px;
+            font-size: 2.2rem;
+            color: white;
+            cursor: pointer;
+        }
+
+        /* Footer */
+        footer {
+            background: #0a192f;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 60px;
+        }
+
+        .social-icons a {
+            color: white;
+            margin: 0 12px;
+            font-size: 22px;
+            transition: 0.3s;
+        }
+
+        .social-icons a:hover {
+            color: #64ffda;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @media screen and (max-width:768px) {
+            .cert-card:hover {
+                transform: scale(1.05);
+            }
+
+            .cert-card img {
+                max-height: 180px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="logo">Dipendra Timalsina</div>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="projects.html">Projects</a>
+            <a href="education.html">Education</a>
+            <a href="certificates.html">Certificates</a>
+            <a href="contact.html">Contact</a>
+        </nav>
+    </header>
+
+    <section>
+        <h2>My Certificates</h2>
+        <div class="cert-container" id="cert-container"></div>
+    </section>
+
+    <!-- Lightbox -->
+    <div id="lightbox">
+        <span id="close">&times;</span>
+        <img src="" alt="Certificate">
+    </div>
+
+    <footer>
+        <div class="social-icons">
+        <a href="https://www.linkedin.com/in/dipendra-timalsina-24776725a/" target="_blank"><i class="fab fa-linkedin"></i></a>
+        <a href="https://github.com/dipendra1186" target="_blank"><i class="fab fa-github"></i></a>
+        <a href="https://www.instagram.com/its_dipendra7/" target="_blank"><i class="fab fa-instagram"></i></a>
+        </div>
+        <p>© 2026 Dipendra Timalsina | Kathmandu, Nepal</p>
+    </footer>
+
+    <script>
+        // Render certificates from localStorage
+        function renderCertificates() {
+            const container = document.getElementById('cert-container');
+            const certs = JSON.parse(localStorage.getItem('certificates')) || [];
+            container.innerHTML = '';
+            certs.forEach(cert => {
+                const card = document.createElement('div');
+                card.className = 'cert-card';
+                card.innerHTML = `
+            <img src="${cert.image}" alt="${cert.subject}">
+            <h3>${cert.subject}</h3>
+            <p>${cert.description}</p>
+            <span>${cert.date}</span>
+        `;
+                card.addEventListener('click', () => openLightbox(cert.image));
+                container.appendChild(card);
+            });
+        }
+
+        // Lightbox
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = lightbox.querySelector('img');
+        const closeBtn = document.getElementById('close');
+
+        function openLightbox(src) {
+            lightbox.style.display = 'flex';
+            lightboxImg.src = src;
+        }
+
+        closeBtn.addEventListener('click', () => lightbox.style.display = 'none');
+        lightbox.addEventListener('click', e => { if (e.target === lightbox) lightbox.style.display = 'none'; });
+
+        document.addEventListener('DOMContentLoaded', renderCertificates);
+    </script>
+</body>
+
+</html>

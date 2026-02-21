@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Certificates | Dipendra Timalsina</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: #f5f7fa;
+            color: #333;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 8%;
+            background: #0a192f;
+            color: white;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        nav a {
+            color: white;
+            margin-left: 20px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+
+        nav a:hover {
+            color: #64ffda;
+        }
+
+        section {
+            padding: 60px 8%;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 40px;
+            color: #0a192f;
+        }
+
+        form {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            max-width: 600px;
+            margin: auto;
+        }
+
+        form input,
+        form textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+
+        form button {
+            padding: 10px 20px;
+            background: #0a192f;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        form button:hover {
+            background: #64ffda;
+            color: #0a192f;
+        }
+
+        .cert-list {
+            margin-top: 50px;
+        }
+
+        .cert-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cert-item img {
+            width: 80px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        .cert-item div {
+            flex: 1;
+            margin-left: 15px;
+        }
+
+        .cert-actions button {
+            margin-left: 5px;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .edit-btn {
+            background: #64ffda;
+            color: #0a192f;
+        }
+
+        .delete-btn {
+            background: #ff4d4d;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="logo">Dipendra Timalsina</div>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="projects.html">Projects</a>
+            <a href="education.html">Education</a>
+            <a href="certificates.html">Certificates</a>
+            <a href="contact.html">Contact</a>
+        </nav>
+    </header>
+
+    <section>
+        <h2>Add New Certificate</h2>
+        <form id="cert-form">
+            <input type="text" id="subject" placeholder="Subject Name" required>
+            <input type="file" id="image" accept="image/*" required>
+            <textarea id="description" placeholder="Short Description" rows="3" required></textarea>
+            <input type="date" id="date" required>
+            <button type="submit">Add Certificate</button>
+        </form>
+
+        <div class="cert-list" id="cert-list"></div>
+    </section>
+
+    <script>
+        let certificates = JSON.parse(localStorage.getItem('certificates')) || [];
+
+        const form = document.getElementById('cert-form');
+        const list = document.getElementById('cert-list');
+
+        function renderList() {
+            list.innerHTML = '';
+            certificates.forEach((cert, index) => {
+                const div = document.createElement('div');
+                div.className = 'cert-item';
+                div.innerHTML = `
+                    <img src="${cert.image}" alt="${cert.subject}">
+                    <div>
+                        <h4>${cert.subject}</h4>
+                        <p>${cert.description}</p>
+                        <small>${cert.date}</small>
+                    </div>
+                    <div class="cert-actions">
+                        <button class="edit-btn" onclick="editCert(${index})">Edit</button>
+                        <button class="delete-btn" onclick="deleteCert(${index})">Delete</button>
+                    </div>
+                `;
+                list.appendChild(div);
+            });
+        }
+
+        function readImage(file) {
+            return new Promise(resolve => {
+                const reader = new FileReader();
+                reader.onload = e => resolve(e.target.result);
+                reader.readAsDataURL(file);
+            });
+        }
+
+        form.addEventListener('submit', async e => {
+            e.preventDefault();
+            const imageFile = document.getElementById('image').files[0];
+            const image = await readImage(imageFile);
+            const cert = {
+                subject: document.getElementById('subject').value,
+                description: document.getElementById('description').value,
+                date: document.getElementById('date').value,
+                image
+            };
+            certificates.push(cert);
+            localStorage.setItem('certificates', JSON.stringify(certificates));
+            renderList();
+            form.reset();
+        });
+
+        function deleteCert(index) {
+            if (confirm('Are you sure to delete this certificate?')) {
+                certificates.splice(index, 1);
+                localStorage.setItem('certificates', JSON.stringify(certificates));
+                renderList();
+            }
+        }
+
+        function editCert(index) {
+            const cert = certificates[index];
+            document.getElementById('subject').value = cert.subject;
+            document.getElementById('description').value = cert.description;
+            document.getElementById('date').value = cert.date;
+            document.getElementById('image').required = false;
+
+            form.querySelector('button').textContent = 'Update Certificate';
+            form.onsubmit = async e => {
+                e.preventDefault();
+                let image = cert.image;
+                const newFile = document.getElementById('image').files[0];
+                if (newFile) image = await readImage(newFile);
+                certificates[index] = {
+                    subject: document.getElementById('subject').value,
+                    description: document.getElementById('description').value,
+                    date: document.getElementById('date').value,
+                    image
+                };
+                localStorage.setItem('certificates', JSON.stringify(certificates));
+                renderList();
+                form.reset();
+                form.querySelector('button').textContent = 'Add Certificate';
+                form.onsubmit = defaultSubmit;
+                document.getElementById('image').required = true;
+            };
+        }
+
+        const defaultSubmit = form.onsubmit;
+        renderList();
+    </script>
+</body>
+
+</html>
