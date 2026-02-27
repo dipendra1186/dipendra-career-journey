@@ -6,26 +6,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Certificates | Dipendra Timalsina</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body {
-            margin: 0;
-            font-family: 'Poppins', sans-serif;
-            background: #f0f4f8;
-            color: #333;
+        :root {
+            --navy: #0a192f;
+            --teal: #64ffda;
+            --bg: #f0f4f8;
+            --card: #ffffff;
+            --text: #1e293b;
+            --muted: #64748b;
         }
 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        /* HEADER */
         header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px 8%;
-            background: #0a192f;
-            color: white;
+            padding: 18px 8%;
+            background: var(--navy);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
         }
 
         .logo {
             font-size: 22px;
             font-weight: 700;
+            color: var(--teal);
         }
 
         nav a {
@@ -37,152 +58,451 @@
         }
 
         nav a:hover {
-            color: #64ffda;
+            color: var(--teal);
         }
 
-        section {
-            padding: 60px 8%;
-        }
-
-        h2 {
+        /* HERO BANNER */
+        .page-banner {
+            background: var(--navy);
+            padding: 50px 8% 60px;
             text-align: center;
-            margin-bottom: 50px;
-            color: #0a192f;
-        }
-
-        .cert-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 30px;
-            perspective: 1000px;
-        }
-
-        .cert-card {
             position: relative;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 15px;
             overflow: hidden;
-            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.1);
-            cursor: pointer;
-            transform-style: preserve-3d;
-            transition: transform 0.5s, box-shadow 0.5s;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
         }
 
-        .cert-card:hover {
-            transform: rotateY(5deg) rotateX(5deg) scale(1.05);
-            box-shadow: 0 25px 40px rgba(0, 0, 0, 0.2);
-        }
-
-        .cert-card img {
-            width: 100%;
-            height: auto;
-            /* auto height to keep aspect ratio */
-            max-height: 220px;
-            /* limit max height to keep uniformity */
-            object-fit: contain;
-            /* ensure whole image fits */
-            transition: transform 0.5s;
-            border-bottom: 1px solid #eee;
-            background: #f7f7f7;
-            /* placeholder background */
-        }
-
-        .cert-card:hover img {
-            transform: scale(1.08);
-        }
-
-        .cert-card h3 {
-            margin: 12px 0 5px;
-            font-size: 1.1rem;
-            color: #0a192f;
-            text-align: center;
-        }
-
-        .cert-card p {
-            font-size: 0.85rem;
-            line-height: 1.4;
-            text-align: center;
-            padding: 0 10px;
-            flex-grow: 1;
-        }
-
-        .cert-card span {
-            font-size: 0.8rem;
-            color: #555;
-            margin-bottom: 12px;
-        }
-
-        /* Lightbox */
-        #lightbox {
-            position: fixed;
-            top: 0;
+        .page-banner::before {
+            content: '';
+            position: absolute;
+            bottom: -1px;
             left: 0;
             width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            display: none;
-            justify-content: center;
+            height: 40px;
+            background: var(--bg);
+            clip-path: ellipse(55% 100% at 50% 100%);
+        }
+
+        .page-banner h2 {
+            font-size: 32px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .page-banner h2 span {
+            color: var(--teal);
+        }
+
+        .page-banner p {
+            color: #94a3b8;
+            font-size: 15px;
+        }
+
+        /* MAIN */
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 50px 5%;
+        }
+
+        /* Filter / search bar */
+        .toolbar {
+            display: flex;
             align-items: center;
-            z-index: 9999;
-            animation: fadeIn 0.3s ease;
+            gap: 14px;
+            margin-bottom: 36px;
+            flex-wrap: wrap;
         }
 
-        #lightbox img {
-            max-width: 90%;
-            max-height: 90%;
-            border-radius: 12px;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+        .search-box {
+            flex: 1;
+            min-width: 200px;
+            position: relative;
         }
 
-        #lightbox span {
+        .search-box i {
             position: absolute;
-            top: 20px;
-            right: 40px;
-            font-size: 2.2rem;
-            color: white;
-            cursor: pointer;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--muted);
+            font-size: 14px;
         }
 
-        /* Footer */
-        footer {
-            background: #0a192f;
-            color: white;
-            text-align: center;
-            padding: 20px;
-            margin-top: 60px;
-        }
-
-        .social-icons a {
-            color: white;
-            margin: 0 12px;
-            font-size: 22px;
+        .search-box input {
+            width: 100%;
+            padding: 11px 14px 11px 38px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 10px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            background: white;
+            outline: none;
             transition: 0.3s;
         }
 
-        .social-icons a:hover {
-            color: #64ffda;
+        .search-box input:focus {
+            border-color: var(--teal);
+            box-shadow: 0 0 0 3px rgba(100, 255, 218, 0.12);
         }
 
-        @keyframes fadeIn {
+        .cert-total {
+            background: var(--navy);
+            color: var(--teal);
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        /* GRID */
+        .cert-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 28px;
+        }
+
+        /* CARD */
+        .cert-card {
+            background: var(--card);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.07);
+            border: 1px solid #e2e8f0;
+            cursor: pointer;
+            transition: transform 0.35s ease, box-shadow 0.35s ease;
+            display: flex;
+            flex-direction: column;
+            animation: fadeUp 0.4s ease both;
+        }
+
+        .cert-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.13);
+        }
+
+        @keyframes fadeUp {
             from {
                 opacity: 0;
+                transform: translateY(20px);
             }
 
             to {
                 opacity: 1;
+                transform: translateY(0);
             }
         }
 
-        @media screen and (max-width:768px) {
-            .cert-card:hover {
-                transform: scale(1.05);
+        /* Image area — multi-image strip */
+        .card-images {
+            position: relative;
+            background: #f1f5f9;
+            overflow: hidden;
+            height: 180px;
+        }
+
+        /* If only one image, fill the space */
+        .card-images.single img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            padding: 10px;
+            transition: transform 0.4s ease;
+        }
+
+        .cert-card:hover .card-images.single img {
+            transform: scale(1.06);
+        }
+
+        /* If multiple images, show as a scrollable strip */
+        .card-images.multi {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: none;
+        }
+
+        .card-images.multi::-webkit-scrollbar {
+            display: none;
+        }
+
+        .card-images.multi img {
+            flex-shrink: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: #f1f5f9;
+            padding: 8px;
+            scroll-snap-align: start;
+            transition: transform 0.4s;
+        }
+
+        /* Multi-image badge */
+        .img-count-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(10, 25, 47, 0.75);
+            color: var(--teal);
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            backdrop-filter: blur(4px);
+        }
+
+        /* Card body */
+        .card-body {
+            padding: 18px 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-body h3 {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 6px;
+            line-height: 1.3;
+        }
+
+        .card-body p {
+            font-size: 13px;
+            color: var(--muted);
+            line-height: 1.55;
+            flex: 1;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #f1f5f9;
+        }
+
+        .card-date {
+            font-size: 11px;
+            color: #94a3b8;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .view-btn {
+            font-size: 12px;
+            color: var(--navy);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: #f0fdf4;
+            padding: 5px 12px;
+            border-radius: 6px;
+            transition: 0.2s;
+        }
+
+        .cert-card:hover .view-btn {
+            background: var(--teal);
+            color: var(--navy);
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            grid-column: 1 / -1;
+        }
+
+        .empty-state i {
+            font-size: 56px;
+            color: #cbd5e1;
+            margin-bottom: 16px;
+        }
+
+        .empty-state h3 {
+            font-size: 20px;
+            color: var(--navy);
+            margin-bottom: 8px;
+        }
+
+        .empty-state p {
+            color: var(--muted);
+        }
+
+        .empty-state a {
+            display: inline-block;
+            margin-top: 18px;
+            padding: 10px 24px;
+            background: var(--teal);
+            color: var(--navy);
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        /* LIGHTBOX */
+        #lightbox {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.93);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+            padding: 20px;
+        }
+
+        #lightbox.active {
+            display: flex;
+        }
+
+        /* Lightbox navigation for multi-image */
+        .lb-wrapper {
+            position: relative;
+            max-width: 90vw;
+            max-height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #lbImg {
+            max-width: 100%;
+            max-height: 80vh;
+            border-radius: 10px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+            object-fit: contain;
+        }
+
+        .lb-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            color: white;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+            backdrop-filter: blur(4px);
+        }
+
+        .lb-nav:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .lb-prev {
+            left: -55px;
+        }
+
+        .lb-next {
+            right: -55px;
+        }
+
+        .lb-nav.hidden {
+            display: none;
+        }
+
+        .lb-counter {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 13px;
+            margin-top: 14px;
+        }
+
+        .lb-title {
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 14px;
+            text-align: center;
+        }
+
+        .lb-close {
+            position: absolute;
+            top: 18px;
+            right: 28px;
+            font-size: 34px;
+            color: white;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: 0.2s;
+            line-height: 1;
+        }
+
+        .lb-close:hover {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+        /* FOOTER */
+        footer {
+            background: var(--navy);
+            color: white;
+            text-align: center;
+            padding: 30px 8%;
+            margin-top: 60px;
+        }
+
+        .social-icons {
+            margin-bottom: 12px;
+        }
+
+        .social-icons a {
+            color: #94a3b8;
+            margin: 0 12px;
+            font-size: 20px;
+            transition: 0.3s;
+        }
+
+        .social-icons a:hover {
+            color: var(--teal);
+        }
+
+        footer p {
+            font-size: 13px;
+            color: #64748b;
+        }
+
+        @media(max-width: 768px) {
+            header {
+                flex-wrap: wrap;
+                gap: 10px;
             }
 
-            .cert-card img {
-                max-height: 180px;
+            nav a {
+                margin-left: 10px;
+                font-size: 13px;
+            }
+
+            .lb-prev {
+                left: -40px;
+            }
+
+            .lb-next {
+                right: -40px;
+            }
+        }
+
+        @media(max-width: 480px) {
+
+            .lb-prev,
+            .lb-next {
+                display: none;
             }
         }
     </style>
@@ -202,60 +522,172 @@
         </nav>
     </header>
 
-    <section>
-        <h2>My Certificates</h2>
-        <div class="cert-container" id="cert-container"></div>
-    </section>
+    <div class="page-banner">
+        <h2>My <span>Certificates</span></h2>
+        <p>Professional certifications and achievements</p>
+    </div>
 
-    <!-- Lightbox -->
+    <main>
+        <div class="toolbar">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Search certificates…">
+            </div>
+            <div class="cert-total" id="certTotal">0 certificates</div>
+        </div>
+
+        <div class="cert-grid" id="cert-grid"></div>
+    </main>
+
+    <!-- LIGHTBOX -->
     <div id="lightbox">
-        <span id="close">&times;</span>
-        <img src="" alt="Certificate">
+        <span class="lb-close" id="lbClose">&times;</span>
+        <div class="lb-title" id="lbTitle"></div>
+        <div class="lb-wrapper">
+            <button class="lb-nav lb-prev" id="lbPrev"><i class="fas fa-chevron-left"></i></button>
+            <img id="lbImg" src="" alt="Certificate">
+            <button class="lb-nav lb-next" id="lbNext"><i class="fas fa-chevron-right"></i></button>
+        </div>
+        <div class="lb-counter" id="lbCounter"></div>
     </div>
 
     <footer>
         <div class="social-icons">
-        <a href="https://www.linkedin.com/in/dipendra-timalsina-24776725a/" target="_blank"><i class="fab fa-linkedin"></i></a>
-        <a href="https://github.com/dipendra1186" target="_blank"><i class="fab fa-github"></i></a>
-        <a href="https://www.instagram.com/its_dipendra7/" target="_blank"><i class="fab fa-instagram"></i></a>
+            <a href="https://www.linkedin.com/in/dipendra-timalsina-24776725a/" target="_blank"><i
+                    class="fab fa-linkedin"></i></a>
+            <a href="https://github.com/dipendra1186" target="_blank"><i class="fab fa-github"></i></a>
+            <a href="https://www.instagram.com/its_dipendra7/" target="_blank"><i class="fab fa-instagram"></i></a>
         </div>
         <p>© 2026 Dipendra Timalsina | Kathmandu, Nepal</p>
     </footer>
 
     <script>
-        // Render certificates from localStorage
-        function renderCertificates() {
-            const container = document.getElementById('cert-container');
-            const certs = JSON.parse(localStorage.getItem('certificates')) || [];
-            container.innerHTML = '';
-            certs.forEach(cert => {
+        // ── Data ─────────────────────────────────────────────────
+        // Reads from localStorage where manage-certificates.html stores data.
+        // Each cert: { subject, description, date, images: [url, url, ...] }
+        function getCerts() {
+            return JSON.parse(localStorage.getItem('certificates')) || [];
+        }
+
+        // ── Lightbox state ───────────────────────────────────────
+        let lbImages = [];
+        let lbIndex = 0;
+
+        const lightbox = document.getElementById('lightbox');
+        const lbImg = document.getElementById('lbImg');
+        const lbTitle = document.getElementById('lbTitle');
+        const lbCounter = document.getElementById('lbCounter');
+        const lbPrev = document.getElementById('lbPrev');
+        const lbNext = document.getElementById('lbNext');
+        const lbClose = document.getElementById('lbClose');
+
+        function openLightbox(images, startIndex, title) {
+            lbImages = images;
+            lbIndex = startIndex;
+            lbTitle.textContent = title;
+            updateLbImage();
+            lightbox.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function updateLbImage() {
+            lbImg.src = lbImages[lbIndex];
+            lbCounter.textContent = lbImages.length > 1
+                ? `${lbIndex + 1} / ${lbImages.length}`
+                : '';
+            lbPrev.classList.toggle('hidden', lbImages.length <= 1 || lbIndex === 0);
+            lbNext.classList.toggle('hidden', lbImages.length <= 1 || lbIndex === lbImages.length - 1);
+        }
+
+        function closeLightbox() {
+            lightbox.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        lbClose.addEventListener('click', closeLightbox);
+        lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+        lbPrev.addEventListener('click', e => { e.stopPropagation(); lbIndex--; updateLbImage(); });
+        lbNext.addEventListener('click', e => { e.stopPropagation(); lbIndex++; updateLbImage(); });
+
+        document.addEventListener('keydown', e => {
+            if (!lightbox.classList.contains('active')) return;
+            if (e.key === 'Escape') closeLightbox();
+            if (e.key === 'ArrowLeft' && lbIndex > 0) { lbIndex--; updateLbImage(); }
+            if (e.key === 'ArrowRight' && lbIndex < lbImages.length - 1) { lbIndex++; updateLbImage(); }
+        });
+
+        // ── Render ───────────────────────────────────────────────
+        function renderGrid(certs) {
+            const grid = document.getElementById('cert-grid');
+            grid.innerHTML = '';
+
+            document.getElementById('certTotal').textContent =
+                `${certs.length} certificate${certs.length !== 1 ? 's' : ''}`;
+
+            if (certs.length === 0) {
+                grid.innerHTML = `
+                <div class="empty-state">
+                    <i class="fas fa-certificate"></i>
+                    <h3>No Certificates Found</h3>
+                    <p>No certificates have been added yet.</p>
+                    <a href="manage-certificates.html">Add Certificates</a>
+                </div>`;
+                return;
+            }
+
+            certs.forEach((cert, cardIdx) => {
+                // Normalise: support both old single `image` and new `images` array
+                const images = cert.images && cert.images.length
+                    ? cert.images
+                    : (cert.image ? [cert.image] : []);
+
+                if (images.length === 0) return; // skip if no images
+
+                const isMulti = images.length > 1;
+
+                // Build image strip
+                const imgHTML = images.map((url, i) =>
+                    `<img src="${url}" alt="${cert.subject} image ${i + 1}" loading="lazy">`
+                ).join('');
+
                 const card = document.createElement('div');
                 card.className = 'cert-card';
+                card.style.animationDelay = `${cardIdx * 0.06}s`;
                 card.innerHTML = `
-            <img src="${cert.image}" alt="${cert.subject}">
-            <h3>${cert.subject}</h3>
-            <p>${cert.description}</p>
-            <span>${cert.date}</span>
-        `;
-                card.addEventListener('click', () => openLightbox(cert.image));
-                container.appendChild(card);
+                <div class="card-images ${isMulti ? 'multi' : 'single'}">
+                    ${imgHTML}
+                    ${isMulti ? `<span class="img-count-badge"><i class="fas fa-images"></i> ${images.length}</span>` : ''}
+                </div>
+                <div class="card-body">
+                    <h3>${cert.subject}</h3>
+                    <p>${cert.description}</p>
+                    <div class="card-footer">
+                        <span class="card-date"><i class="far fa-calendar-alt"></i> ${cert.date || ''}</span>
+                        <span class="view-btn"><i class="fas fa-expand-alt"></i> View</span>
+                    </div>
+                </div>`;
+
+                // Click anywhere on card opens lightbox at first image
+                card.addEventListener('click', () => openLightbox(images, 0, cert.subject));
+
+                grid.appendChild(card);
             });
         }
 
-        // Lightbox
-        const lightbox = document.getElementById('lightbox');
-        const lightboxImg = lightbox.querySelector('img');
-        const closeBtn = document.getElementById('close');
+        // ── Search ───────────────────────────────────────────────
+        document.getElementById('searchInput').addEventListener('input', function () {
+            const q = this.value.toLowerCase();
+            const certs = getCerts();
+            const filtered = q
+                ? certs.filter(c =>
+                    c.subject.toLowerCase().includes(q) ||
+                    c.description.toLowerCase().includes(q))
+                : certs;
+            renderGrid(filtered);
+        });
 
-        function openLightbox(src) {
-            lightbox.style.display = 'flex';
-            lightboxImg.src = src;
-        }
-
-        closeBtn.addEventListener('click', () => lightbox.style.display = 'none');
-        lightbox.addEventListener('click', e => { if (e.target === lightbox) lightbox.style.display = 'none'; });
-
-        document.addEventListener('DOMContentLoaded', renderCertificates);
+        // ── Init ─────────────────────────────────────────────────
+        document.addEventListener('DOMContentLoaded', () => renderGrid(getCerts()));
     </script>
 </body>
 
