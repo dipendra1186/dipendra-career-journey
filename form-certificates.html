@@ -33,7 +33,6 @@
             min-height: 100vh;
         }
 
-        /* HEADER */
         header {
             position: sticky;
             top: 0;
@@ -41,9 +40,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 18px 8%;
+            padding: 20px 8%;
             background: var(--navy);
-            backdrop-filter: blur(10px);
             box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
         }
 
@@ -65,7 +63,53 @@
             color: var(--teal);
         }
 
-        /* MAIN LAYOUT */
+        /* ── SETUP BANNER ── */
+        .setup-banner {
+            background: #fffbeb;
+            border: 1.5px solid #fcd34d;
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin: 0 auto 36px;
+            max-width: 640px;
+            display: none;
+            /* shown by JS if not configured */
+        }
+
+        .setup-banner.show {
+            display: block;
+        }
+
+        .setup-banner h4 {
+            font-size: 15px;
+            font-weight: 700;
+            color: #92400e;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .setup-banner ol {
+            font-size: 13px;
+            color: #78350f;
+            padding-left: 18px;
+            line-height: 2;
+        }
+
+        .setup-banner a {
+            color: #b45309;
+            font-weight: 600;
+        }
+
+        .setup-banner code {
+            background: #fef3c7;
+            padding: 2px 7px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+
+        /* ── PAGE WRAPPER ── */
         .page-wrapper {
             max-width: 1100px;
             margin: 0 auto;
@@ -89,7 +133,47 @@
             font-size: 14px;
         }
 
-        /* FORM CARD */
+        /* Sync status bar */
+        .sync-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            margin-bottom: 20px;
+            max-width: 640px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .sync-bar.ok {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            color: #166534;
+        }
+
+        .sync-bar.busy {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            color: #1e40af;
+        }
+
+        .sync-bar.err {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #991b1b;
+        }
+
+        .sync-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: currentColor;
+            flex-shrink: 0;
+        }
+
+        /* ── FORM CARD ── */
         .form-card {
             background: var(--card);
             border-radius: 16px;
@@ -125,7 +209,6 @@
             font-weight: 600;
             color: var(--navy);
             margin-bottom: 6px;
-            letter-spacing: 0.3px;
         }
 
         .form-group input,
@@ -154,7 +237,6 @@
             min-height: 80px;
         }
 
-        /* File drop zone */
         .drop-zone {
             border: 2px dashed #cbd5e1;
             border-radius: 10px;
@@ -198,16 +280,11 @@
             font-weight: 600;
         }
 
-        /* Image previews */
         .image-preview {
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
             margin-top: 12px;
-        }
-
-        .preview-item {
-            position: relative;
         }
 
         .preview-item img {
@@ -218,7 +295,6 @@
             border: 2px solid #e2e8f0;
         }
 
-        /* Submit button */
         .btn-submit {
             width: 100%;
             padding: 13px;
@@ -249,7 +325,6 @@
             transform: none;
         }
 
-        /* Upload progress */
         .upload-status {
             display: none;
             align-items: center;
@@ -316,7 +391,7 @@
             color: #f87171;
         }
 
-        /* CERT LIST SECTION */
+        /* List */
         .list-header {
             display: flex;
             justify-content: space-between;
@@ -339,7 +414,6 @@
             font-weight: 600;
         }
 
-        /* Empty state */
         .empty-state {
             text-align: center;
             padding: 60px 20px;
@@ -352,6 +426,7 @@
             font-size: 48px;
             color: #cbd5e1;
             margin-bottom: 14px;
+            display: block;
         }
 
         .empty-state p {
@@ -359,7 +434,6 @@
             font-size: 15px;
         }
 
-        /* Cert items */
         .cert-item {
             background: var(--card);
             border-radius: 14px;
@@ -540,7 +614,7 @@
     <header>
         <div class="logo">Dipendra Timalsina</div>
         <nav>
-            <a href="index.html"><i class="fas fa-home"></i> Home</a>
+            <a href="index.html">Home</a>
             <a href="about.html">About</a>
             <a href="projects.html">Projects</a>
             <a href="education.html">Education</a>
@@ -553,7 +627,26 @@
 
         <div class="page-title">
             <h2>Manage Certificates</h2>
-            <p>Add, view and delete your certificates. They'll appear on the public certificates page.</p>
+            <p>Add or delete certificates. Changes sync to all devices instantly.</p>
+        </div>
+
+        <!-- Setup instructions shown until configured -->
+        <div class="setup-banner" id="setupBanner">
+            <h4><i class="fas fa-exclamation-triangle"></i> One-time setup needed to sync across devices</h4>
+            <ol>
+                <li>Go to <a href="https://jsonbin.io" target="_blank">jsonbin.io</a> → sign up free</li>
+                <li>Click <strong>+ Create Bin</strong> → paste <code>[]</code> as content → Save</li>
+                <li>Copy the <strong>BIN ID</strong> (looks like: <code>66a1b2c3d4e5f6...</code>)</li>
+                <li>Go to <strong>API Keys</strong> tab → copy your <strong>X-Master-Key</strong></li>
+                <li>Open this file in a text editor → find <code>JSONBIN_ID</code> and <code>JSONBIN_KEY</code> at the
+                    top of the &lt;script&gt; and paste your values</li>
+            </ol>
+        </div>
+
+        <!-- Sync status -->
+        <div class="sync-bar busy" id="syncBar">
+            <div class="sync-dot"></div>
+            <span id="syncMsg">Connecting to cloud…</span>
         </div>
 
         <!-- ADD FORM -->
@@ -576,7 +669,7 @@
                     <div class="drop-zone" id="dropZone">
                         <input type="file" id="image" accept="image/*" multiple required>
                         <i class="fas fa-cloud-upload-alt"></i>
-                        <p><span>Click to upload</span> or drag & drop</p>
+                        <p><span>Click to upload</span> or drag &amp; drop</p>
                         <p>PNG, JPG, JPEG — multiple allowed</p>
                     </div>
                     <div class="image-preview" id="preview"></div>
@@ -598,7 +691,6 @@
             </form>
         </div>
 
-        <!-- LIST -->
         <div class="list-header">
             <h3>Existing Certificates</h3>
             <span class="cert-count" id="certCount">0 added</span>
@@ -620,36 +712,89 @@
     </div>
 
     <script>
+        // ════════════════════════════════════════════════════════
+        //  ⚙️  PASTE YOUR CREDENTIALS HERE
+        // ════════════════════════════════════════════════════════
+        const JSONBIN_ID = '69a14525ae596e708f4e8801';   // e.g. '66a1b2c3d4e5f67890abcdef'
+        const JSONBIN_KEY = '$2a$10$RJ9Llpn50qdjpUo5XO.2guOaGDxTrxUPkcX2747BCRhmCBwCmgXYG'; // e.g. '$2a$10$abc...'
+
         const CLOUD_NAME = 'dheesdhyx';
         const UPLOAD_PRESET = 'Certificates';
 
-        // ── Storage helpers ──────────────────────────────────────
-        function getCerts() {
-            return JSON.parse(localStorage.getItem('certificates')) || [];
+        const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_ID}`;
+        const CONFIGURED = JSONBIN_ID !== 'YOUR_BIN_ID_HERE' && JSONBIN_KEY !== 'YOUR_MASTER_KEY_HERE';
+
+        // ── Show setup banner if not configured ──────────────────
+        if (!CONFIGURED) {
+            document.getElementById('setupBanner').classList.add('show');
+            setSyncBar('err', '⚠ Not configured — data is saved locally only (not synced)');
         }
 
-        function saveCerts(arr) {
-            localStorage.setItem('certificates', JSON.stringify(arr));
+        // ── Sync bar helper ──────────────────────────────────────
+        function setSyncBar(state, msg) {
+            const bar = document.getElementById('syncBar');
+            bar.className = `sync-bar ${state}`;
+            document.getElementById('syncMsg').textContent = msg;
         }
 
         // ── Toast ────────────────────────────────────────────────
         function showToast(msg, type = 'success') {
-            const toast = document.getElementById('toast');
-            const icon = toast.querySelector('i');
+            const t = document.getElementById('toast');
+            t.className = `toast ${type}`;
+            t.querySelector('i').className = type === 'success' ? 'fas fa-check-circle' : 'fas fa-exclamation-circle';
             document.getElementById('toastMsg').textContent = msg;
-            toast.className = `toast ${type}`;
-            icon.className = type === 'success' ? 'fas fa-check-circle' : 'fas fa-exclamation-circle';
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 3200);
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 3200);
         }
 
-        // ── Image preview ────────────────────────────────────────
+        // ── Cloud read ───────────────────────────────────────────
+        async function cloudRead() {
+            if (!CONFIGURED) {
+                return JSON.parse(localStorage.getItem('certificates')) || [];
+            }
+            setSyncBar('busy', 'Loading certificates…');
+            try {
+                const res = await fetch(JSONBIN_URL + '/latest', {
+                    headers: { 'X-Master-Key': JSONBIN_KEY }
+                });
+                const data = await res.json();
+                const certs = Array.isArray(data.record) ? data.record : [];
+                // keep local cache in sync
+                localStorage.setItem('certificates', JSON.stringify(certs));
+                setSyncBar('ok', `Synced — ${certs.length} certificate${certs.length !== 1 ? 's' : ''} in cloud`);
+                return certs;
+            } catch (e) {
+                setSyncBar('err', 'Cloud unavailable — showing local cache');
+                return JSON.parse(localStorage.getItem('certificates')) || [];
+            }
+        }
+
+        // ── Cloud write ──────────────────────────────────────────
+        async function cloudWrite(certs) {
+            localStorage.setItem('certificates', JSON.stringify(certs));
+            if (!CONFIGURED) return;
+            setSyncBar('busy', 'Saving to cloud…');
+            try {
+                await fetch(JSONBIN_URL, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Master-Key': JSONBIN_KEY
+                    },
+                    body: JSON.stringify(certs)
+                });
+                setSyncBar('ok', `Synced — ${certs.length} certificate${certs.length !== 1 ? 's' : ''} in cloud`);
+            } catch (e) {
+                setSyncBar('err', 'Cloud save failed — saved locally only');
+            }
+        }
+
+        // ── Drag & drop preview ──────────────────────────────────
         const imageInput = document.getElementById('image');
         const preview = document.getElementById('preview');
         const dropZone = document.getElementById('dropZone');
 
         imageInput.addEventListener('change', handleFiles);
-
         dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
         dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
         dropZone.addEventListener('drop', e => {
@@ -671,7 +816,7 @@
             });
         }
 
-        // ── Upload to Cloudinary ─────────────────────────────────
+        // ── Cloudinary upload ────────────────────────────────────
         async function uploadToCloudinary(file) {
             const fd = new FormData();
             fd.append('file', file);
@@ -691,7 +836,6 @@
 
         form.addEventListener('submit', async e => {
             e.preventDefault();
-
             const subject = document.getElementById('subject').value.trim();
             const description = document.getElementById('description').value.trim();
             const date = document.getElementById('date').value;
@@ -712,18 +856,17 @@
                     urls.push(await uploadToCloudinary(files[i]));
                 }
 
-                const cert = { subject, description, date, images: urls };
-                const certs = getCerts();
-                certs.push(cert);
-                saveCerts(certs);
+                uploadMsg.textContent = 'Saving to cloud…';
+                const certs = await cloudRead();
+                certs.push({ subject, description, date, images: urls });
+                await cloudWrite(certs);
 
-                renderList();
+                await renderList();
                 form.reset();
                 preview.innerHTML = '';
-                showToast('Certificate added successfully!');
+                showToast('Certificate added and synced to all devices!');
             } catch (err) {
-                console.error(err);
-                showToast('Upload failed: ' + err.message, 'error');
+                showToast('Error: ' + err.message, 'error');
             } finally {
                 submitBtn.disabled = false;
                 uploadStatus.classList.remove('active');
@@ -731,9 +874,9 @@
         });
 
         // ── Render list ──────────────────────────────────────────
-        function renderList() {
+        async function renderList() {
             const list = document.getElementById('cert-list');
-            const certs = getCerts();
+            const certs = await cloudRead();
             document.getElementById('certCount').textContent = `${certs.length} added`;
             list.innerHTML = '';
 
@@ -770,13 +913,13 @@
             });
         }
 
-        function deleteCert(idx) {
-            if (!confirm('Delete this certificate? This cannot be undone.')) return;
-            const certs = getCerts();
+        async function deleteCert(idx) {
+            if (!confirm('Delete this certificate? It will be removed for everyone.')) return;
+            const certs = await cloudRead();
             certs.splice(idx, 1);
-            saveCerts(certs);
-            renderList();
-            showToast('Certificate deleted.');
+            await cloudWrite(certs);
+            await renderList();
+            showToast('Certificate deleted from all devices.');
         }
 
         // ── Lightbox ─────────────────────────────────────────────
