@@ -30,6 +30,7 @@
             min-height: 100vh;
         }
 
+        /* ── HEADER ── */
         header {
             position: sticky;
             top: 0;
@@ -53,6 +54,18 @@
             margin-left: 20px;
             text-decoration: none;
             font-weight: 500;
+            position: relative;
+            transition: color 0.3s;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background: var(--teal);
             transition: 0.3s;
         }
 
@@ -60,6 +73,9 @@
             color: var(--teal);
         }
 
+        nav a:hover::after {
+            width: 100%;
+        }
         /* BANNER */
         .page-banner {
             background: var(--navy);
@@ -739,3 +755,4 @@
 </body>
 
 </html>
+
