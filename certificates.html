@@ -30,7 +30,6 @@
             min-height: 100vh;
         }
 
-        /* HEADER */
         header {
             position: sticky;
             top: 0;
@@ -38,7 +37,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 18px 8%;
+            padding: 20px 8%;
             background: var(--navy);
             box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
         }
@@ -61,7 +60,7 @@
             color: var(--teal);
         }
 
-        /* HERO BANNER */
+        /* BANNER */
         .page-banner {
             background: var(--navy);
             padding: 50px 8% 60px;
@@ -73,12 +72,27 @@
         .page-banner::before {
             content: '';
             position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(100, 255, 218, 0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(100, 255, 218, 0.04) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        .page-banner::after {
+            content: '';
+            position: absolute;
             bottom: -1px;
             left: 0;
             width: 100%;
             height: 40px;
             background: var(--bg);
             clip-path: ellipse(55% 100% at 50% 100%);
+        }
+
+        .banner-inner {
+            position: relative;
+            z-index: 1;
         }
 
         .page-banner h2 {
@@ -97,6 +111,34 @@
             font-size: 15px;
         }
 
+        /* Loading skeleton */
+        .loading-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--muted);
+            font-size: 14px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .load-spinner {
+            width: 36px;
+            height: 36px;
+            border: 3px solid #e2e8f0;
+            border-top-color: var(--teal);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
         /* MAIN */
         main {
             max-width: 1200px;
@@ -104,7 +146,6 @@
             padding: 50px 5%;
         }
 
-        /* Filter / search bar */
         .toolbar {
             display: flex;
             align-items: center;
@@ -193,7 +234,6 @@
             }
         }
 
-        /* Image area — multi-image strip */
         .card-images {
             position: relative;
             background: #f1f5f9;
@@ -201,7 +241,6 @@
             height: 180px;
         }
 
-        /* If only one image, fill the space */
         .card-images.single img {
             width: 100%;
             height: 100%;
@@ -214,7 +253,6 @@
             transform: scale(1.06);
         }
 
-        /* If multiple images, show as a scrollable strip */
         .card-images.multi {
             display: flex;
             overflow-x: auto;
@@ -234,10 +272,8 @@
             background: #f1f5f9;
             padding: 8px;
             scroll-snap-align: start;
-            transition: transform 0.4s;
         }
 
-        /* Multi-image badge */
         .img-count-badge {
             position: absolute;
             top: 10px;
@@ -251,7 +287,6 @@
             backdrop-filter: blur(4px);
         }
 
-        /* Card body */
         .card-body {
             padding: 18px 20px;
             flex: 1;
@@ -313,7 +348,7 @@
             color: var(--navy);
         }
 
-        /* Empty state */
+        /* Empty */
         .empty-state {
             text-align: center;
             padding: 80px 20px;
@@ -324,6 +359,7 @@
             font-size: 56px;
             color: #cbd5e1;
             margin-bottom: 16px;
+            display: block;
         }
 
         .empty-state h3 {
@@ -365,7 +401,6 @@
             display: flex;
         }
 
-        /* Lightbox navigation for multi-image */
         .lb-wrapper {
             position: relative;
             max-width: 90vw;
@@ -523,8 +558,10 @@
     </header>
 
     <div class="page-banner">
-        <h2>My <span>Certificates</span></h2>
-        <p>Professional certifications and achievements</p>
+        <div class="banner-inner">
+            <h2>My <span>Certificates</span></h2>
+            <p>Professional certifications and achievements</p>
+        </div>
     </div>
 
     <main>
@@ -533,10 +570,15 @@
                 <i class="fas fa-search"></i>
                 <input type="text" id="searchInput" placeholder="Search certificates…">
             </div>
-            <div class="cert-total" id="certTotal">0 certificates</div>
+            <div class="cert-total" id="certTotal">Loading…</div>
         </div>
 
-        <div class="cert-grid" id="cert-grid"></div>
+        <div class="cert-grid" id="cert-grid">
+            <div class="loading-state">
+                <div class="load-spinner"></div>
+                <span>Loading certificates…</span>
+            </div>
+        </div>
     </main>
 
     <!-- LIGHTBOX -->
@@ -562,16 +604,36 @@
     </footer>
 
     <script>
-        // ── Data ─────────────────────────────────────────────────
-        // Reads from localStorage where manage-certificates.html stores data.
-        // Each cert: { subject, description, date, images: [url, url, ...] }
-        function getCerts() {
-            return JSON.parse(localStorage.getItem('certificates')) || [];
+        // ════════════════════════════════════════════════════════
+        //  ⚙️  PASTE THE SAME CREDENTIALS AS manage-certificates.html
+        // ════════════════════════════════════════════════════════
+        const JSONBIN_ID = '69a14525ae596e708f4e8801';   // e.g. '66a1b2c3d4e5f67890abcdef'
+        const JSONBIN_KEY = '$2a$10$RJ9Llpn50qdjpUo5XO.2guOaGDxTrxUPkcX2747BCRhmCBwCmgXYG';
+
+        const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_ID}`;
+        const CONFIGURED = JSONBIN_ID !== 'YOUR_BIN_ID_HERE' && JSONBIN_KEY !== 'YOUR_MASTER_KEY_HERE';
+
+        // ── Fetch certs from cloud (fallback: localStorage) ──────
+        async function fetchCerts() {
+            if (!CONFIGURED) {
+                return JSON.parse(localStorage.getItem('certificates')) || [];
+            }
+            try {
+                const res = await fetch(JSONBIN_URL + '/latest', {
+                    headers: { 'X-Master-Key': JSONBIN_KEY }
+                });
+                const data = await res.json();
+                const certs = Array.isArray(data.record) ? data.record : [];
+                localStorage.setItem('certificates', JSON.stringify(certs)); // local cache
+                return certs;
+            } catch (e) {
+                // cloud unavailable — serve local cache silently
+                return JSON.parse(localStorage.getItem('certificates')) || [];
+            }
         }
 
-        // ── Lightbox state ───────────────────────────────────────
-        let lbImages = [];
-        let lbIndex = 0;
+        // ── Lightbox ──────────────────────────────────────────────
+        let lbImages = [], lbIndex = 0;
 
         const lightbox = document.getElementById('lightbox');
         const lbImg = document.getElementById('lbImg');
@@ -579,48 +641,41 @@
         const lbCounter = document.getElementById('lbCounter');
         const lbPrev = document.getElementById('lbPrev');
         const lbNext = document.getElementById('lbNext');
-        const lbClose = document.getElementById('lbClose');
 
         function openLightbox(images, startIndex, title) {
-            lbImages = images;
-            lbIndex = startIndex;
+            lbImages = images; lbIndex = startIndex;
             lbTitle.textContent = title;
-            updateLbImage();
+            updateLb();
             lightbox.classList.add('active');
             document.body.style.overflow = 'hidden';
         }
 
-        function updateLbImage() {
+        function updateLb() {
             lbImg.src = lbImages[lbIndex];
-            lbCounter.textContent = lbImages.length > 1
-                ? `${lbIndex + 1} / ${lbImages.length}`
-                : '';
+            lbCounter.textContent = lbImages.length > 1 ? `${lbIndex + 1} / ${lbImages.length}` : '';
             lbPrev.classList.toggle('hidden', lbImages.length <= 1 || lbIndex === 0);
             lbNext.classList.toggle('hidden', lbImages.length <= 1 || lbIndex === lbImages.length - 1);
         }
 
-        function closeLightbox() {
-            lightbox.classList.remove('active');
-            document.body.style.overflow = '';
-        }
+        function closeLb() { lightbox.classList.remove('active'); document.body.style.overflow = ''; }
 
-        lbClose.addEventListener('click', closeLightbox);
-        lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
-        lbPrev.addEventListener('click', e => { e.stopPropagation(); lbIndex--; updateLbImage(); });
-        lbNext.addEventListener('click', e => { e.stopPropagation(); lbIndex++; updateLbImage(); });
-
+        document.getElementById('lbClose').addEventListener('click', closeLb);
+        lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLb(); });
+        lbPrev.addEventListener('click', e => { e.stopPropagation(); lbIndex--; updateLb(); });
+        lbNext.addEventListener('click', e => { e.stopPropagation(); lbIndex++; updateLb(); });
         document.addEventListener('keydown', e => {
             if (!lightbox.classList.contains('active')) return;
-            if (e.key === 'Escape') closeLightbox();
-            if (e.key === 'ArrowLeft' && lbIndex > 0) { lbIndex--; updateLbImage(); }
-            if (e.key === 'ArrowRight' && lbIndex < lbImages.length - 1) { lbIndex++; updateLbImage(); }
+            if (e.key === 'Escape') closeLb();
+            if (e.key === 'ArrowLeft' && lbIndex > 0) { lbIndex--; updateLb(); }
+            if (e.key === 'ArrowRight' && lbIndex < lbImages.length - 1) { lbIndex++; updateLb(); }
         });
 
-        // ── Render ───────────────────────────────────────────────
+        // ── Render grid ───────────────────────────────────────────
+        let allCerts = [];
+
         function renderGrid(certs) {
             const grid = document.getElementById('cert-grid');
             grid.innerHTML = '';
-
             document.getElementById('certTotal').textContent =
                 `${certs.length} certificate${certs.length !== 1 ? 's' : ''}`;
 
@@ -628,31 +683,25 @@
                 grid.innerHTML = `
                 <div class="empty-state">
                     <i class="fas fa-certificate"></i>
-                    <h3>No Certificates Found</h3>
-                    <p>No certificates have been added yet.</p>
-                    <a href="manage-certificates.html">Add Certificates</a>
+                    <h3>No Certificates Yet</h3>
+                    <p>Check back soon!</p>
                 </div>`;
                 return;
             }
 
-            certs.forEach((cert, cardIdx) => {
-                // Normalise: support both old single `image` and new `images` array
-                const images = cert.images && cert.images.length
-                    ? cert.images
-                    : (cert.image ? [cert.image] : []);
-
-                if (images.length === 0) return; // skip if no images
+            certs.forEach((cert, i) => {
+                const images = cert.images?.length ? cert.images
+                    : cert.image ? [cert.image] : [];
+                if (!images.length) return;
 
                 const isMulti = images.length > 1;
-
-                // Build image strip
-                const imgHTML = images.map((url, i) =>
-                    `<img src="${url}" alt="${cert.subject} image ${i + 1}" loading="lazy">`
+                const imgHTML = images.map((url, j) =>
+                    `<img src="${url}" alt="${cert.subject} ${j + 1}" loading="lazy">`
                 ).join('');
 
                 const card = document.createElement('div');
                 card.className = 'cert-card';
-                card.style.animationDelay = `${cardIdx * 0.06}s`;
+                card.style.animationDelay = `${i * 0.06}s`;
                 card.innerHTML = `
                 <div class="card-images ${isMulti ? 'multi' : 'single'}">
                     ${imgHTML}
@@ -667,27 +716,25 @@
                     </div>
                 </div>`;
 
-                // Click anywhere on card opens lightbox at first image
                 card.addEventListener('click', () => openLightbox(images, 0, cert.subject));
-
                 grid.appendChild(card);
             });
         }
 
-        // ── Search ───────────────────────────────────────────────
+        // ── Search ────────────────────────────────────────────────
         document.getElementById('searchInput').addEventListener('input', function () {
             const q = this.value.toLowerCase();
-            const certs = getCerts();
-            const filtered = q
-                ? certs.filter(c =>
-                    c.subject.toLowerCase().includes(q) ||
-                    c.description.toLowerCase().includes(q))
-                : certs;
-            renderGrid(filtered);
+            renderGrid(q ? allCerts.filter(c =>
+                c.subject.toLowerCase().includes(q) ||
+                c.description.toLowerCase().includes(q)
+            ) : allCerts);
         });
 
-        // ── Init ─────────────────────────────────────────────────
-        document.addEventListener('DOMContentLoaded', () => renderGrid(getCerts()));
+        // ── Init ──────────────────────────────────────────────────
+        document.addEventListener('DOMContentLoaded', async () => {
+            allCerts = await fetchCerts();
+            renderGrid(allCerts);
+        });
     </script>
 </body>
 
